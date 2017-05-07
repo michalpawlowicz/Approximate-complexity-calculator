@@ -94,6 +94,15 @@ class Complexity:
     def predict_time(self, problem_size):
         return self.fn(self.coefficients, problem_size)
 
+        # time in microseconds or second ?
+    def predict_size(self, time, left=1, right=25):
+        if left + 1 == right:
+            return 2 ** left;
+        middle = int((left + right) / 2)
+        if self.predict_time(2 ** middle) < time:
+            return self.predict_size(time, middle, right)
+        else:
+            return self.predict_size(time, left, middle)
 
 def approximate_complexity(algorithm : Algorithm, time_out=5, total_max_time=30, epsilon=0.1, debug=True):
     if not isinstance(algorithm, Algorithm.Algorithm):
