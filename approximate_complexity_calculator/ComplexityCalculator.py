@@ -1,5 +1,4 @@
-
-import Algorithm
+from .Algorithm import Algorithm
 import numpy as np
 import matplotlib.pyplot as plt
 import multiprocessing
@@ -105,7 +104,7 @@ class Complexity:
             return self.predict_size(time, left, middle)
 
 def approximate_complexity(algorithm : Algorithm, time_out=5, total_max_time=30, epsilon=0.1, debug=True):
-    if not isinstance(algorithm, Algorithm.Algorithm):
+    if not isinstance(algorithm, Algorithm):
         raise ValueError("Class must extend Algorithm Class")
     if time_out <= 0:
         raise ValueError("Time out must be greater than zero")

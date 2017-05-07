@@ -1,9 +1,7 @@
-import Algorithm
+import approximate_complexity_calculator as acc
 import random
-import ComplexityCalculator
 
-
-class IncrementArray(Algorithm.Algorithm):
+class IncrementArray(acc.Algorithm):
 
     def initial(self, n):
         x = list(range(n))
@@ -19,5 +17,5 @@ class IncrementArray(Algorithm.Algorithm):
 
 
 algorithm = IncrementArray()
-tc = ComplexityCalculator.approximate_complexity(algorithm, time_out=10, debug=True)
+tc = acc.approximate_complexity(algorithm, time_out=10, debug=True)
 print(tc.predict_time(100000))

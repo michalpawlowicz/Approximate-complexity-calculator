@@ -1,20 +1,6 @@
 
 from abc import ABC, abstractmethod
 
-"""
-Implementations of this class is used in complexity calculator,
-all those methods are abstract so they must be oveloaded in extended classes
-"""
-from enum import Enum
-
-
-class TimeComplexity(Enum):
-    LINEAR = 1
-    QUADRATIC = 2
-    CUBIC = 3
-    NLOGN = 4
-
-
 class Algorithm(ABC):
     def __init__(self):
         pass

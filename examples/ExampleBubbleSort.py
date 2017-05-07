@@ -1,9 +1,7 @@
-import Algorithm
 import random
-import ComplexityCalculator
+import approximate_complexity_calculator
 
-
-class ExampleBubbleSort(Algorithm.Algorithm):
+class ExampleBubbleSort(approximate_complexity_calculator.Algorithm):
     def initial(self, n):
         x = list(range(n))
         random.shuffle(x)
@@ -24,5 +22,5 @@ class ExampleBubbleSort(Algorithm.Algorithm):
 
 
 algorithm = ExampleBubbleSort()
-tc = ComplexityCalculator.approximate_complexity(algorithm, time_out=5, debug=True)
+tc = approximate_complexity_calculator.approximate_complexity(algorithm, time_out=5, debug=True)
 print(tc.predict_time(1024))
