@@ -2,6 +2,10 @@
 
 ## Installation
 
+```
+ pip install git+https://github.com/michalpawlowicz/Approximate-complexity-calculator.git
+```
+
 ## Example
 ### Bubble-Sort
 First thing to do is implementation of `Algorithm` class.<br />
@@ -37,6 +41,7 @@ algorithm = ExampleSort()tc = approximate_complexity_calculator.approximate_comp
 print(tc.predict_size(4)) # returns size of array which can be soreted in less than 4 seconds
 print(tc.predict_time(1024)) # requaire time for sorting array of 1024 elements
 ```
+More examples in `examples` folder, [link](https://github.com/michalpawlowicz/Approximate-complexity-calculator/tree/master/examples)
 
 ## Documentation 
 `documentation` folder contain full documentation in html format.
