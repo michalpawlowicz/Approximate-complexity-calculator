@@ -9,6 +9,12 @@ from enum import Enum
 
 
 def sum_of_squares(x, y, fn):
+    """
+    Calculates error between training set and our approximation
+    Residential sum of squares: sum(|f(x) - y|^2)
+    for all (x,y) in out training set
+    :return: float which represents error
+    """
     return sum([(i - j) ** 2 for i, j in zip(map(fn, x), y)])
 
 
@@ -17,6 +23,12 @@ def nlogn(c, x):
 
 
 def linear_logarithmic_regression(x, y, plot=False):
+    """
+    :param x: discrete set, with y creates training set
+    :param y: discrete set, with x create training set
+    :param plot: used for debugging, plot function and training set using matplotlib
+    :return: array [a, b, c] which represents coefficients of function a * x * np.log2(b * x) + c
+    """
     def fn(x, a, b, c):
         return a * x * np.log2(b * x) + c
     pars, pcov = curve_fit(
@@ -37,6 +49,11 @@ def linear_logarithmic_regression(x, y, plot=False):
 
 
 def polynomial_regression(x, y, n, plot=False):
+    """
+    Function does the same thing what linear_logarithmic_regression does
+    :n: Polynomial degree
+    :return: array of coefficients
+    """
     if n <= 0:
         raise ValueError("Regression degree must be greater then zero")
     if len(x) != len(y):
@@ -93,7 +110,7 @@ class Complexity:
     def predict_time(self, problem_size):
         return self.fn(self.coefficients, problem_size)
 
-        # time in microseconds or second ?
+        # time in seconds
     def predict_size(self, time, left=1, right=25):
         if left + 1 == right:
             return 2 ** left;
@@ -103,12 +120,27 @@ class Complexity:
         else:
             return self.predict_size(time, left, middle)
 
+
 def approximate_complexity(algorithm : Algorithm, time_out=5, total_max_time=30, epsilon=0.1, debug=True):
+    """
+    :param algorithm: Object of class which implements Algorithm abstract class
+    :param time_out: Time in seconds, max time how long one sample may take
+    :param total_max_time: Time in seconds, max time how long whole approximation may take
+    :param epsilon: helps to choose between linear function and square function, coefficient next to `x^2`
+        may be almost numerical zero, so then `x^2` does not really matters.
+        In that case linear approximation is a better option.
+    :param debug: Plot result or not, if True logger writes to terminal
+    :return: Object of class Complexity which represent time complexity.
+    """
     if not isinstance(algorithm, Algorithm):
         raise ValueError("Class must extend Algorithm Class")
     if time_out <= 0:
         raise ValueError("Time out must be greater than zero")
+
     logger = logging.getLogger(__name__) # why __name__ ?
+    # if variable debug is set to True, show logs in terminal
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
 
     @operation_time(seconds=time_out, logger=logger)
     def measure_time(problem_size):
@@ -123,10 +155,10 @@ def approximate_complexity(algorithm : Algorithm, time_out=5, total_max_time=30,
                 for j in range (0, 4):
                     problem_size = (2 ** i) + int(j/4 * (2 ** i))
                     if debug:
-                        print("Sampling problem size " + str(problem_size))
+                        logger.info("Sampling problem size " + str(problem_size))
                     result = measure_time(problem_size)
                     if result is not None:
-                        # None may be returned if sample require computation more time than time_out
+                        # None may be returned if sample require more computation time than time_out
                         input_val.append(problem_size)
                         output_val.append(result)
                         total_time += result.total_seconds()
@@ -134,7 +166,7 @@ def approximate_complexity(algorithm : Algorithm, time_out=5, total_max_time=30,
                         raise BreakAllLoops()
 
                     if total_time >= total_max_time:
-                        # total time out break
+                        # break from loops if total timeout was overstep
                         logger.warning("Total timeout")
                         raise BreakAllLoops()
         except BreakAllLoops:
@@ -166,22 +198,28 @@ def approximate_complexity(algorithm : Algorithm, time_out=5, total_max_time=30,
 
         errors = [("Linear", linear_error), ("Quadratic", quadratic_error), ("Linear-logarithmic", lin_log_error)]
         if debug:
-            print("Value of residential sum of squares:")
-            print(errors)
-
+            logger.info("Value of residential sum of squares: " + str(errors))
         if debug:
             plt.show()
+
+        c = min(errors, key=lambda x: x[1])
+        if c[0] == "Linear-logarithmic":
+            if debug:
+                print("Approximate complexity: O(nlogn)")
+            return Complexity(ComplexityClasses.LINEAR_LOGARITHMIC, coe_lin_log, nlogn)
+
+        if c[0] == "Linear":
+            if debug:
+                print("Approximate complexity: O(N)")
+            return Complexity(ComplexityClasses.LINEAR, coe_linear, np.polyval)
 
         if abs(quadratic_error - linear_error) < epsilon:
             if debug:
                 print("Approximate complexity: O(N)")
             return Complexity(ComplexityClasses.LINEAR, coe_linear, np.polyval)
         else:
-            c = min(errors, key=lambda x: x[1])
             if debug:
-                print("Approximate complexity: " + c[0])
-            if c[0] == "Quadratic":
-                return Complexity(ComplexityClasses.QUADRATIC, coe_quadratic, np.polyval)
-            else:
-                return Complexity(ComplexityClasses.LINEAR_LOGARITHMIC, coe_lin_log, nlogn)
+                print("Approximate complexity: O(N^2)")
+            return Complexity(ComplexityClasses.QUADRATIC, coe_quadratic, np.polyval)
+
     return choose_time_complexity()

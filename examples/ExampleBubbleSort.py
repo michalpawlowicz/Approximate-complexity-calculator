@@ -1,6 +1,7 @@
 import random
 import approximate_complexity_calculator
 
+
 class ExampleBubbleSort(approximate_complexity_calculator.Algorithm):
     def initial(self, n):
         x = list(range(n))
@@ -23,4 +24,4 @@ class ExampleBubbleSort(approximate_complexity_calculator.Algorithm):
 
 algorithm = ExampleBubbleSort()
 tc = approximate_complexity_calculator.approximate_complexity(algorithm, time_out=5, debug=True)
-print(tc.predict_time(1024))
+print(tc.predict_size(3))

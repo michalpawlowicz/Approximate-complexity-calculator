@@ -1,9 +1,10 @@
-import Algorithm
 import random
-import ComplexityCalculator
+import approximate_complexity_calculator as acc
 
 
-class ExampleSort(Algorithm.Algorithm):
+class ExampleSort(acc.Algorithm):
+    def __init__(self):
+        pass
 
     def initial(self, n):
         x = list(range(n))
@@ -18,4 +19,4 @@ class ExampleSort(Algorithm.Algorithm):
 
 
 algorithm = ExampleSort()
-tc = ComplexityCalculator.approximate_complexity(algorithm, time_out=10, total_max_time=30, debug=True)
+tc = acc.approximate_complexity(algorithm, time_out=10, total_max_time=30, debug=True)
