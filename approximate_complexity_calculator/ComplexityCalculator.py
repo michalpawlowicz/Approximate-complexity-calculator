@@ -19,6 +19,11 @@ def sum_of_squares(x, y, fn):
 
 
 def nlogn(c, x):
+    """
+    :param c: coefficients array
+    :param x: value
+    :return: f(x)
+    """
     return c[0] * x * np.log2(c[1] * x) + c[2]
 
 
@@ -51,7 +56,7 @@ def linear_logarithmic_regression(x, y, plot=False):
 def polynomial_regression(x, y, n, plot=False):
     """
     Function does the same thing what linear_logarithmic_regression does
-    :n: Polynomial degree
+    :param n: Polynomial degree
     :return: array of coefficients
     """
     if n <= 0:
@@ -70,6 +75,12 @@ def polynomial_regression(x, y, n, plot=False):
 
 
 def operation_time(seconds=5, logger=None):
+    """
+    Decorator, wraps function and meansure it's execution time, terminate it after time specified in timeout
+    :param seconds: timeout in seconds, after that time function will be terminated
+    :param logger: logger for errors
+    :return: execution time of function in microseconds
+    """
     def decorator(function):
         def wrapper(*args, **kwargs):
             p = multiprocessing.Process(target=function, args=args, kwargs=kwargs)
