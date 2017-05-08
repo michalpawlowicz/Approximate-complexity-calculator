@@ -37,7 +37,8 @@ class ExampleBubbleSort(approximate_complexity_calculator.Algorithm):
 ```
 
 ```python
-algorithm = ExampleSort()tc = approximate_complexity_calculator.approximate_complexity(algorithm, time_out=5, debug=True)
+algorithm = ExampleSort()
+tc = approximate_complexity_calculator.approximate_complexity(algorithm, time_out=5, debug=True)
 print(tc.predict_size(4)) # returns size of array which can be soreted in less than 4 seconds
 print(tc.predict_time(1024)) # requaire time for sorting array of 1024 elements
 ```
